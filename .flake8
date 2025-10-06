@@ -1,0 +1,15 @@
+[flake8]
+max-line-length = 120
+exclude =
+    .venv,
+    venv,
+    build,
+    dist,
+    __pycache__,
+    .git,
+    interfaces
+ignore =
+    E203,
+    W503
+per-file-ignores =
+    mapping_backend/app/__init__.py: F401

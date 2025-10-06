@@ -1,5 +1,6 @@
 from flask_smorest import Blueprint
 from flask.views import MethodView
+from flask import request
 
 from ..schemas import VendorCreateSchema, VendorSchema, VendorUpdateSchema
 from ..services import list_vendors, create_vendor, get_vendor, update_vendor, delete_vendor
@@ -11,10 +12,13 @@ blp = Blueprint("Vendors", "vendors", url_prefix="/vendors", description="CRUD f
 class VendorsList(MethodView):
     # PUBLIC_INTERFACE
     def get(self):
-        """List vendors.
-        Returns all vendors.
+        """List vendors with pagination.
+        Query params: page (default 1), pageSize (default 50)
         """
-        return {"items": list_vendors()}
+        page = int(request.args.get("page", 1))
+        page_size = int(request.args.get("pageSize", 50))
+        items, total = list_vendors(page=page, page_size=page_size)
+        return {"items": items, "page": page, "pageSize": page_size, "total": total}
 
     # PUBLIC_INTERFACE
     @blp.arguments(VendorCreateSchema)
